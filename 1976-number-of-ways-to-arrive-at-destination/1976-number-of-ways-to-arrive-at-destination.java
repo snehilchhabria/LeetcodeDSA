@@ -40,11 +40,15 @@ class Solution {
                 int adjNode = p.node;
                 int wt = p.distance;
                 
+                //if shorter distance found to the adjNode then update the dist and ways for adjNode would be same as
+                //Node as node has come up with shorter distance so we will store its no. of ways
                 if(wt + distance < dist[adjNode]){
                     dist[adjNode] = wt + distance;
                     pq.add(new Pair(distance + wt, adjNode));
                     ways[adjNode] = ways[node];
                 }
+                //if same distance is found that means we have found another route to travel to the adjNode with same 
+                //distance so no. of routes/ways should be added up as they all have the same cost to their destination
                 else if(wt + distance == dist[adjNode]){
                     ways[adjNode] = (ways[node] + ways[adjNode])% mod;
                 }
