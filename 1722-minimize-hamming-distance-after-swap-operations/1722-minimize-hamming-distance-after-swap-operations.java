@@ -10,8 +10,17 @@ class Solution {
         //this holds the element in the source array along with all of the different parent cells it can reach
         HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
         for (int i = 0; i < n; i++) {
-            map.computeIfAbsent(source[i], k -> new ArrayList<>()).add(uf.getAbsoluteParent(i));
+            int sourceElement = source[i];
+            int parentID = uf.getAbsoluteParent(i);
+    
+            if (!map.containsKey(sourceElement)) {
+                map.put(sourceElement, new ArrayList<>());
+            }
+    
+            List<Integer> list = map.get(sourceElement);
+            list.add(parentID);
         }
+        
         for (int i = 0; i < n; i++) {
             //if there is no target cell number that means it doesn't exist in source array so it will be difference
             //also check to see if target cell number has a parent that matches the parent of curr cell i
