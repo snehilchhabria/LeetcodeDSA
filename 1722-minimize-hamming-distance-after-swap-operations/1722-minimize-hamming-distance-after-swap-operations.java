@@ -1,13 +1,16 @@
 class Solution {
     public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
         
-        int n = source.length, answer = 0;
-        //union the cells that can be connected thru swaps
+        //if you dont know what is UnionFind  Algorithm then I would suggest you to first study that
+        
+        int n = source.length, HamDis = 0;
         UnionFind uf = new UnionFind(n);
+        
         for (int[] swap : allowedSwaps) {
             uf.unify(swap[0], swap[1]);
         }
-        //this holds the element in the source array along with all of the different parent cells it can reach
+        
+        //source[i] --> their parent Id
         HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
         for (int i = 0; i < n; i++) {
             int sourceElement = source[i];
@@ -22,12 +25,22 @@ class Solution {
         }
         
         for (int i = 0; i < n; i++) {
-            //if there is no target cell number that means it doesn't exist in source array so it will be difference
-            //also check to see if target cell number has a parent that matches the parent of curr cell i
-            answer += (!map.containsKey(target[i]) || !map.get(target[i]).remove(new Integer(uf.getAbsoluteParent(i)))) ? 1 : 0;
+            //if there is no target cell in map that means it doesn't exists in source s0 hamDis +=1
+            //2nd exprsn checks if the removal operation was successful.
+            //If the element was not present in the collection and therefore couldn't be removed,
+            //it evaluates to false so HamDis++ . If the element was successfully
+            //removed or the collection is empty, it evaluates to true and no increment to HamDis
+            
+              if((!map.containsKey(target[i]))){
+                  HamDis += 1;
+              }
+                 else if(!map.get(target[i]).remove(new Integer(uf.getAbsoluteParent(i)))){
+                  HamDis += 1;
+              }
         }
-        return answer;
+        return HamDis;
     }
+    
     private class UnionFind{
        private int[] parent;
         
@@ -37,6 +50,7 @@ class Solution {
                 parent[i] = i;
             }
         }
+        
         private int getAbsoluteParent(int i){
             if(parent[i] == i){
                 return i;
@@ -44,6 +58,7 @@ class Solution {
             parent[i] = getAbsoluteParent(parent[i]);
             return parent[i];
         }
+        
         private void unify(int i, int j){
             int absoluteParentI = getAbsoluteParent(i);
             int absoluteParentJ = getAbsoluteParent(j);
